@@ -1,0 +1,43 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #1a73e8;
+  --color-primary-foreground: #ffffff;
+  --color-background: #f8f9fa;
+  --color-foreground: #202124;
+  --color-surface: #ffffff;
+  --color-border: #dadce0;
+  --color-text-secondary: #5f6368;
+}
+
+@layer base {
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: 'Roboto', 'Google Sans', sans-serif;
+  }
+}
+
+.gam-card {
+  @apply bg-white border border-[#dadce0] rounded-lg shadow-sm;
+}
+
+.input-styled {
+  @apply bg-white border border-[#dadce0] text-[#202124] rounded px-3 py-2 w-full focus:outline-none focus:border-[#1a73e8] focus:ring-1 focus:ring-[#1a73e8] transition-all text-sm;
+}
+
+.btn-primary {
+  @apply bg-[#1a73e8] text-white px-4 py-2 rounded font-medium hover:bg-[#1b66c9] hover:shadow-md transition-all text-sm;
+}
+
+.btn-secondary {
+  @apply bg-transparent text-[#1a73e8] border border-[#dadce0] px-4 py-2 rounded font-medium hover:bg-blue-50 transition-all text-sm;
+}
+
+.gam-table th {
+  @apply p-3 text-left text-xs font-medium text-[#5f6368] border-b border-[#dadce0] uppercase tracking-wider;
+}
+
+.gam-table td {
+  @apply p-3 text-sm text-[#202124] border-b border-[#dadce0];
+}

@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Publisher Website</title>
+  <link rel="icon" href="./Mintserve.webp" type="image/webp">
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f8f9fa;
+      color: #202124;
+    }
+
+    header {
+      background-color: #1a73e8;
+      color: white;
+      padding: 1.25rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 500;
+    }
+
+    .badge {
+      background-color: rgba(255, 255, 255, 0.2);
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    /* Interactive Preview Controls */
+    .tester-panel {
+      max-width: 1200px;
+      margin: 1.5rem auto 0 auto;
+      background: white;
+      padding: 1.25rem;
+      border-radius: 8px;
+      border: 1px solid #dadce0;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+
+    .tester-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #3c4043;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .tester-title span {
+      color: #1a73e8;
+      font-weight: bold;
+    }
+
+    .tester-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      align-items: flex-end;
+    }
+
+    .tester-field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .tester-field label {
+      font-size: 11px;
+      font-weight: 600;
+      color: #5f6368;
+      text-transform: uppercase;
+    }
+
+    .tester-input {
+      padding: 6px 12px;
+      font-size: 13px;
+      border: 1px solid #dadce0;
+      border-radius: 4px;
+      background-color: #fff;
+      color: #3c4043;
+      min-width: 140px;
+      outline: none;
+    }
+
+    .tester-input:focus {
+      border-color: #1a73e8;
+    }
+
+    .tester-btn {
+      background-color: #1a73e8;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      font-size: 13px;
+      font-weight: 500;
+      border-radius: 4px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.15s;
+    }
+
+    .tester-btn:hover {
+      background-color: #1557b0;
+    }
+
+    .tester-btn:active {
+      background-color: #174ea6;
+    }
+
+    .container {
+      display: flex;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1.5rem 0 3rem 0;
+      gap: 24px;
+    }
+
+    .content {
+      flex: 3;
+      background: white;
+      padding: 2rem;
+      border-radius: 8px;
+      border: 1px solid #dadce0;
+    }
+
+    .content h2 {
+      margin-top: 0;
+      color: #202124;
+      font-weight: 500;
+    }
+
+    .sidebar {
+      flex: 1.2;
+      background: white;
+      padding: 1.5rem;
+      border-radius: 8px;
+      border: 1px solid #dadce0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 340px;
+    }
+
+    .sidebar h3 {
+      margin-top: 0;
+      margin-bottom: 12px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #5f6368;
+      width: 100%;
+      text-align: left;
+    }
+
+    #ad-container {
+      background-color: #f1f3f4;
+      border: 2px dashed #dadce0;
+      border-radius: 6px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #5f6368;
+      font-size: 12px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.2s ease-in-out;
+    }
+
+    #ad-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      cursor: pointer;
+    }
+
+    #tracking-pixel {
+      display: none;
+    }
+
+    /* Meta details board */
+    .metadata-board {
+      width: 100%;
+      margin-top: 16px;
+      padding: 12px;
+      background-color: #f8f9fa;
+      border: 1px solid #dadce0;
+      border-radius: 6px;
+      font-size: 11px;
+    }
+
+    .metadata-title {
+      font-weight: 600;
+      color: #3c4043;
+      margin-bottom: 8px;
+      border-b: 1px solid #dadce0;
+      padding-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .metadata-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 4px;
+    }
+
+    .metadata-label {
+      color: #5f6368;
+    }
+
+    .metadata-value {
+      font-weight: 500;
+      color: #202124;
+      text-align: right;
+    }
+
+    .metadata-val-success {
+      color: #0f9d58;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <div style="display: flex; align-items: center; gap: 14px;">
+      <img src="./public/Mintserve.webp" alt="Mintserve Logo"
+        style="height: 80px; width: auto; object-fit: contain; background: white; padding: 6px 12px; border-radius: 6px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);" />
+      <h1 style="font-size: 1.5rem; margin: 0; font-weight: 500; letter-spacing: -0.5px;">Publisher Sandbox</h1>
+    </div>
+    <div class="badge">Integration Active</div>
+  </header>
+
+  <!-- Dynamic Tester Control Bar -->
+  <div class="tester-panel">
+    <div class="tester-title">
+      <span>✦</span> Mintserve Ad Server Live Tester
+    </div>
+    <div class="tester-grid">
+      <div class="tester-field">
+        <label for="ad-unit-select">Target Ad Unit</label>
+        <select id="ad-unit-select" class="tester-input">
+          <option value="">Loading Ad Units...</option>
+        </select>
+      </div>
+      <div class="tester-field">
+        <label for="device-select">Device Type</label>
+        <select id="device-select" class="tester-input">
+          <option value="Desktop">Desktop</option>
+          <option value="Mobile">Mobile</option>
+        </select>
+      </div>
+      <div class="tester-field">
+        <label for="geo-input">Geographic Code (Geo)</label>
+        <input type="text" id="geo-input" class="tester-input" value="US" placeholder="e.g. US, IN, CA" />
+      </div>
+      <button id="serve-btn" class="tester-btn">
+        Serve Targeted Ad
+      </button>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="content">
+      <h2>Latest Sandbox Article</h2>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore
+        magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+        consequat.</p>
+      <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+        Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+      </p>
+      <p>This sandbox renders live ad decisions from your local Mintserve server. Change ad unit selections, target
+        rules, and flight details, then re-trigger ad calls directly above.</p>
+    </div>
+
+    <div class="sidebar">
+      <h3>Ad Slot Render View</h3>
+
+      <!-- This is where the ad will be injected and resized dynamically -->
+      <div id="ad-container" style="width: 300px; height: 250px;">
+        Select an Ad Unit to fetch live campaign creatives.
+      </div>
+
+      <!-- Live Ad Metadata Readout -->
+      <div class="metadata-board">
+        <div class="metadata-title">Ad Server Metadata</div>
+        <div id="metadata-details">
+          <div class="metadata-row">
+            <span class="metadata-label">Status</span>
+            <span class="metadata-value" style="color: #c5221f;">No ad requested</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hidden tracking pixel for impressions -->
+      <img id="tracking-pixel" src="" alt="tracking">
+    </div>
+  </div>
+
+  <script>
+    const API_URL = 'http://localhost:5000';
+    let availableAdUnits = [];
+
+    // Fetch and populate ad units on page load
+    async function initTester() {
+      try {
+        const response = await fetch(`${API_URL}/api/admin/ad-units`);
+        if (!response.ok) throw new Error("Could not fetch ad units list");
+
+        availableAdUnits = await response.json();
+        const select = document.getElementById('ad-unit-select');
+        select.innerHTML = '';
+
+        if (availableAdUnits.length === 0) {
+          select.innerHTML = '<option value="">No ad units in DB</option>';
+          return;
+        }
+
+        availableAdUnits.forEach(unit => {
+          const opt = document.createElement('option');
+          opt.value = unit._id;
+          opt.textContent = `${unit.name} (${unit.dimensions ? `${unit.dimensions.width}x${unit.dimensions.height}` : 'Custom'})`;
+          select.appendChild(opt);
+        });
+
+        // Set default view container dimensions to match first unit
+        updateAdContainerDimensions(availableAdUnits[0]);
+        // Load default ad
+        fetchAd();
+      } catch (err) {
+        console.error("Initialization failed:", err);
+        document.getElementById('ad-unit-select').innerHTML = '<option value="">Connection error</option>';
+      }
+    }
+
+    // Resize the ad viewport container
+    function updateAdContainerDimensions(unit) {
+      const adContainer = document.getElementById('ad-container');
+      if (unit && unit.dimensions && unit.dimensions.width && unit.dimensions.height) {
+        adContainer.style.width = `${unit.dimensions.width}px`;
+        adContainer.style.height = `${unit.dimensions.height}px`;
+      } else {
+        adContainer.style.width = '300px';
+        adContainer.style.height = '250px';
+      }
+    }
+
+    // Fetch ad with active targeting settings
+    async function fetchAd() {
+      const select = document.getElementById('ad-unit-select');
+      const device = document.getElementById('device-select').value;
+      const geo = document.getElementById('geo-input').value;
+      const adContainer = document.getElementById('ad-container');
+      const metaDetails = document.getElementById('metadata-details');
+
+      const adUnitId = select.value;
+      if (!adUnitId) {
+        adContainer.innerHTML = 'Please select a valid target ad unit.';
+        return;
+      }
+
+      // Find selected ad unit object to dynamically resize container
+      const unit = availableAdUnits.find(u => u._id === adUnitId);
+      if (unit) {
+        updateAdContainerDimensions(unit);
+      }
+
+      adContainer.innerHTML = '<span style="font-size:11px;">Requesting Ad Decision...</span>';
+
+      try {
+        const queryParams = new URLSearchParams({ adUnitId, device, geo }).toString();
+        const response = await fetch(`${API_URL}/api/serve?${queryParams}`);
+
+        if (!response.ok) {
+          adContainer.innerHTML = 'No eligible campaigns match targeting rules or limits.';
+          metaDetails.innerHTML = `
+            <div class="metadata-row">
+              <span class="metadata-label">Decision Status</span>
+              <span class="metadata-value" style="color: #c5221f;">House / No Match</span>
+            </div>
+            <div class="metadata-row" style="margin-top: 4px;">
+              <span class="metadata-label">Reason</span>
+              <span class="metadata-value" style="font-style: italic;">No active, un-capped line items found with today's flight dates.</span>
+            </div>
+          `;
+          return;
+        }
+
+        const adData = await response.json();
+
+        // 1. Create and inject ad creative image element
+        const adImage = document.createElement('img');
+        adImage.src = adData.mediaUrl;
+        adImage.alt = "Served Advertisement";
+
+        // 2. Attach click redirect tracker link
+        adImage.onclick = () => {
+          window.open(adData.trackingPixels.clickUrl, '_blank');
+        };
+
+        adContainer.innerHTML = ''; // Clear status message
+        adContainer.appendChild(adImage);
+
+        // 3. Fire impression pixel tracker
+        const trackingPixel = document.getElementById('tracking-pixel');
+        trackingPixel.src = adData.trackingPixels.impressionUrl;
+
+        // 4. Update preview metadata details panel
+        metaDetails.innerHTML = `
+          <div class="metadata-row">
+            <span class="metadata-label">Decision Status</span>
+            <span class="metadata-value metadata-val-success">Ad Served Successfully</span>
+          </div>
+          <div class="metadata-row">
+            <span class="metadata-label">Campaign / Line Item</span>
+            <span class="metadata-value" style="font-weight:bold;">${adData.lineItemName || 'Sponsorship ad'}</span>
+          </div>
+          <div class="metadata-row">
+            <span class="metadata-label">Goal Target</span>
+            <span class="metadata-value">${adData.deliveryGoal || 'CPM / CPC'}</span>
+          </div>
+          <div class="metadata-row">
+            <span class="metadata-label">Creative Size</span>
+            <span class="metadata-value">${unit && unit.dimensions ? `${unit.dimensions.width}x${unit.dimensions.height}` : 'Custom'}</span>
+          </div>
+        `;
+
+        console.log("Decision engine response metadata:", adData);
+
+      } catch (error) {
+        console.error('Ad Request Error:', error);
+        adContainer.innerHTML = 'Error communicating with Mintserve ad engine.';
+        metaDetails.innerHTML = `
+          <div class="metadata-row">
+            <span class="metadata-label">Connection Status</span>
+            <span class="metadata-value" style="color: #c5221f;">Failed</span>
+          </div>
+        `;
+      }
+    }
+
+    // Attach listeners
+    document.getElementById('serve-btn').onclick = fetchAd;
+    document.getElementById('ad-unit-select').onchange = (e) => {
+      const unit = availableAdUnits.find(u => u._id === e.target.value);
+      if (unit) {
+        updateAdContainerDimensions(unit);
+      }
+      fetchAd();
+    };
+
+    // Run on startup
+    window.onload = initTester;
+  </script>
+</body>
+
+</html>
