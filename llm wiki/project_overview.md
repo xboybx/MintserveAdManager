@@ -248,3 +248,30 @@ To match Google Ad Manager's exact data hierarchy and operational capabilities, 
 - **Seeded Historical Data**: Seed script (`server/seed.js`) updated to create hierarchical orders and load 14 days of realistic database analytics records for reporting graphs.
 - **Chart.js Timeline Integration**: Built a premium, client-side dynamic line chart (`src/components/DashboardChart.js`) using Chart.js. The chart shows daily Impressions (on left Y-axis in blue) and Clicks (on right Y-axis in mint green) with custom area gradients and interactive tooltips.
 - **Mintserve Branding & Visual Alignment**: Replaced all Google/generic placeholders with Mintserve branding, resized the top-left logo, and aligned the search box layout across all dashboard lists to prevent overlapping text.
+
+### Current Implementation State (Latest Commit)
+- **Interactive Live Tester Sandbox (`index.html`)**: Upgraded the mock publisher sandbox into a fully dynamic ad testing dashboard. It reads active database ad units via API, auto-populates options, resizes layout preview slots on the fly, serves targeted creative matching rules, and displays decision logs.
+- **CSP Resolved**: Relaxed helmet Content Security Policy configurations (`contentSecurityPolicy: false`) on port 5000 to enable local sandbox inline scripts.
+- **Favicon Integration**: Removed default React favicon icon and mapped `src/Mintserve.webp` to Next.js metadata icons list for dynamic tab logo rendering.
+
+---
+
+## 9. Future Milestones & Roadmap
+
+To expand Mintserve into a production-grade publisher ad server, the following milestones are planned for future development:
+
+### Milestone 1: Advanced Targeting Capabilities (Key-Values)
+*   **Custom Key-Value Targeting**: Allow publishers to pass arbitrary targeting keys (e.g. `category=sports`, `age=25`, `subscription=premium`) in the ad tag query string.
+*   **Decision Logic Expansion**: Update `server/routes/delivery.js` serving query to support custom string/boolean matching rules configured on the Line Item targeting panel.
+
+### Milestone 2: Frequency Capping & Delivery Controls
+*   **User Capping**: Store user cookie/device identifiers to restrict the number of times a single user sees a specific line item within a set period (e.g., max 3 impressions per user per day).
+*   **Even Pacing Algorithm**: Shift from instant delivery to an even-distribution pacing algorithm that spreads impressions dynamically across the flight start and end dates.
+
+### Milestone 3: Rich Media & Video Serving (VAST)
+*   **Video Ad Tagging**: Extend the decision engine to support IAB-standard VAST (Video Ad Serving Template) XML responses for pre-roll and mid-roll video players.
+*   **HTML5 Rich Media**: Support script-based third-party creatives and iframe redirections alongside static image file hosting.
+
+### Milestone 4: Real-time Live Reporting (WebSockets)
+*   **Real-time Revenue Telemetry**: Add WebSocket channels between Express and Next.js to stream analytics updates dynamically.
+*   **Live Dashboard Alerts**: Log active impression counter updates and goal completion alerts on the Home dashboard instantly without manual page refreshes.
