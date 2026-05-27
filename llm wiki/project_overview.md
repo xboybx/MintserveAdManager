@@ -247,6 +247,15 @@ To match Google Ad Manager's exact data hierarchy and operational capabilities, 
 - **Hierarchical Line Items**: Line Items now belong directly to **Orders** (which reference Advertisers), aligning precisely with real PubOps traffic flow.
 - **Seeded Historical Data**: Seed script (`server/seed.js`) updated to create hierarchical orders and load 14 days of realistic database analytics records for reporting graphs.
 - **Chart.js Timeline Integration**: Built a premium, client-side dynamic line chart (`src/components/DashboardChart.js`) using Chart.js. The chart shows daily Impressions (on left Y-axis in blue) and Clicks (on right Y-axis in mint green) with custom area gradients and interactive tooltips.
+
+### Recent Updates (2026-05-27) — Vercel Deployment Fixes & Ad Preview Hub
+| Item | Status | Notes |
+|------|--------|-------|
+| `vercel.json` created | ✅ Done | Forces Vercel to recognize project as Next.js (prevents static site misclassification) and adds `/preview` rewrite to `/index.html` to fix 404 errors |
+| `index.html` moved to `/public` | ✅ Done | Relocated from root to `/public/index.html` to work with Next.js static file serving, fixed broken image paths |
+| **Comprehensive Ad Preview Hub** (`/public/ad-preview.html`) | ✅ Done | Full-featured review page with all standard IAB ad sizes in realistic website positions: 728x90, 970x90, 300x250, 320x50, 160x600 |
+| Preview Hub features | ✅ Done | Device view toggles (Desktop/Tablet/Mobile), one-click ad serving to all slots, live status logging, responsive dummy website layout |
+| All documentation updated | ✅ Done | `navigation.md`, `campaign_creation_and_testing_guide.md`, and `project_overview.md` updated to reflect new file structure and features |
 - **Mintserve Branding & Visual Alignment**: Replaced all Google/generic placeholders with Mintserve branding, resized the top-left logo, and aligned the search box layout across all dashboard lists to prevent overlapping text.
 
 ### Current Implementation State (Latest Commit)

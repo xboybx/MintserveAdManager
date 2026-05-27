@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mintserve - Ad Slot Preview Hub</title>
+  <link rel="icon" href="/Mintserve.webp" type="image/webp">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: #f8f9fa;
+      color: #202124;
+      line-height: 1.6;
+    }
+
+    header {
+      background: linear-gradient(135deg, #1a73e8 0%, #0d47a1 100%);
+      color: white;
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+
+    .header-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .logo {
+      height: 60px;
+      width: auto;
+      background: white;
+      padding: 6px 12px;
+      border-radius: 6px;
+    }
+
+    .header-text h1 {
+      font-size: 1.5rem;
+      font-weight: 500;
+    }
+
+    .header-text p {
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+
+    /* Controls Panel */
+    .controls-panel {
+      max-width: 1400px;
+      margin: 1.5rem auto;
+      background: white;
+      padding: 1.5rem;
+      border-radius: 8px;
+      border: 1px solid #dadce0;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+
+    .controls-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      align-items: flex-end;
+    }
+
+    .control-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .control-group label {
+      font-size: 11px;
+      font-weight: 600;
+      color: #5f6368;
+      text-transform: uppercase;
+    }
+
+    .control-group select, .control-group input {
+      padding: 8px 12px;
+      font-size: 13px;
+      border: 1px solid #dadce0;
+      border-radius: 4px;
+      min-width: 180px;
+      outline: none;
+    }
+
+    .control-group select:focus, .control-group input:focus {
+      border-color: #1a73e8;
+    }
+
+    .serve-all-btn {
+      background-color: #1a73e8;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 13px;
+      font-weight: 500;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .serve-all-btn:hover {
+      background-color: #1557b0;
+    }
+
+    /* Main Website Demo Layout */
+    .demo-website {
+      max-width: 1400px;
+      margin: 0 auto 3rem;
+      background: white;
+      border: 1px solid #dadce0;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    /* Leaderboard (728x90) - Top Banner */
+    .leaderboard-ad {
+      width: 100%;
+      min-height: 90px;
+      background-color: #f1f3f4;
+      border-bottom: 1px solid #dadce0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+    }
+
+    .ad-slot {
+      border: 2px dashed #dadce0;
+      border-radius: 4px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #f8f9fa;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .ad-slot.served {
+      border-style: solid;
+      border-color: #0f9d58;
+    }
+
+    .ad-slot img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      cursor: pointer;
+    }
+
+    .ad-label {
+      position: absolute;
+      top: 4px;
+      left: 4px;
+      background: rgba(0,0,0,0.7);
+      color: white;
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 3px;
+    }
+
+    /* Main Content Layout */
+    .main-content {
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: 2rem;
+      padding: 2rem;
+    }
+
+    .article-content h2 {
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
+      color: #1a73e8;
+    }
+
+    .article-meta {
+      color: #5f6368;
+      font-size: 0.9rem;
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid #eee;
+    }
+
+    .article-content p {
+      margin-bottom: 1.2rem;
+      font-size: 1.1rem;
+    }
+
+    /* Medium Rectangle (300x250) - In-Article */
+    .in-article-ad {
+      margin: 2rem 0;
+      display: flex;
+      justify-content: center;
+    }
+
+    .ad-300x250 {
+      width: 300px;
+      height: 250px;
+    }
+
+    /* Mobile Leaderboard (320x50) - Mid-Article */
+    .mobile-banner-ad {
+      margin: 2rem 0;
+      display: flex;
+      justify-content: center;
+    }
+
+    .ad-320x50 {
+      width: 320px;
+      height: 50px;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    /* Wide Skyscraper (160x600) - Sidebar */
+    .ad-160x600 {
+      width: 160px;
+      height: 600px;
+      margin: 0 auto;
+    }
+
+    /* Rectangle (300x600) - Sidebar Half-Page */
+    .ad-300x600 {
+      width: 300px;
+      height: 600px;
+    }
+
+    /* Footer Billboard (970x90) */
+    .footer-billboard {
+      width: 100%;
+      padding: 1rem;
+      background-color: #f1f3f4;
+      border-top: 1px solid #dadce0;
+      display: flex;
+      justify-content: center;
+    }
+
+    .ad-970x90 {
+      width: 970px;
+      height: 90px;
+    }
+
+    /* Ad Size Legend */
+    .ad-sizes-legend {
+      max-width: 1400px;
+      margin: 0 auto 2rem;
+      background: white;
+      padding: 1.5rem;
+      border-radius: 8px;
+      border: 1px solid #dadce0;
+    }
+
+    .ad-sizes-legend h3 {
+      margin-bottom: 1rem;
+      color: #202124;
+    }
+
+    .sizes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+
+    .size-card {
+      padding: 1rem;
+      background: #f8f9fa;
+      border-radius: 6px;
+      border: 1px solid #e0e0e0;
+    }
+
+    .size-card h4 {
+      font-size: 1rem;
+      color: #1a73e8;
+      margin-bottom: 0.5rem;
+    }
+
+    .size-card p {
+      font-size: 0.85rem;
+      color: #5f6368;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 11px;
+      font-weight: 600;
+      margin-top: 0.5rem;
+    }
+
+    .status-active {
+      background: #e6f4ea;
+      color: #0f9d58;
+    }
+
+    /* Status Panel */
+    .status-panel {
+      max-width: 1400px;
+      margin: 0 auto 1.5rem;
+      padding: 1rem;
+      background: #e8f0fe;
+      border-radius: 8px;
+      border: 1px solid #1a73e8;
+    }
+
+    .status-panel h3 {
+      color: #1a73e8;
+      margin-bottom: 0.5rem;
+    }
+
+    #status-log {
+      font-family: monospace;
+      font-size: 12px;
+      color: #202124;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-container">
+      <img src="/Mintserve.webp" alt="Mintserve Logo" class="logo">
+      <div class="header-text">
+        <h1>Ad Slot Preview Hub</h1>
+        <p>Preview every standard ad size on a realistic dummy website - see exactly how your ads will appear to visitors</p>
+      </div>
+    </div>
+  </header>
+
+  <div class="controls-panel">
+    <div class="controls-grid">
+      <div class="control-group">
+        <label>🌍 Geographic Target</label>
+        <input type="text" id="geo-input" value="US" placeholder="e.g. US, IN, UK">
+      </div>
+      <div class="control-group">
+        <label>📱 Device Mode</label>
+        <select id="device-select">
+          <option value="Desktop">Desktop View</option>
+          <option value="Mobile">Mobile View</option>
+          <option value="Tablet">Tablet View</option>
+        </select>
+      </div>
+      <div class="control-group">
+        <label>📡 API URL</label>
+        <input type="text" id="api-input" value="http://localhost:5000" placeholder="Your Mintserve API URL">
+      </div>
+      <button class="serve-all-btn" id="serve-all-btn">
+        🎯 Serve Ads to All Slots
+      </button>
+    </div>
+  </div>
+
+  <div class="status-panel">
+    <h3>📊 Ad Server Status</h3>
+    <div id="status-log">Waiting to serve ads...</div>
+  </div>
+
+  <div class="ad-sizes-legend">
+    <h3>📍 All Ad Slots on This Page</h3>
+    <div class="sizes-grid">
+      <div class="size-card">
+        <h4>728x90 Leaderboard</h4>
+        <p>Top banner - classic desktop header ad</p>
+        <span class="status-badge status-active">Active</span>
+      </div>
+      <div class="size-card">
+        <h4>970x90 Billboard</h4>
+        <p>Wide footer banner for maximum visibility</p>
+        <span class="status-badge status-active">Active</span>
+      </div>
+      <div class="size-card">
+        <h4>300x250 Medium Rectangle</h4>
+        <p>In-article - most versatile in-content ad</p>
+        <span class="status-badge status-active">Active</span>
+      </div>
+      <div class="size-card">
+        <h4>320x50 Mobile Banner</h4>
+        <p>Mobile-first mid-article banner</p>
+        <span class="status-badge status-active">Active</span>
+      </div>
+      <div class="size-card">
+        <h4>160x600 Wide Skyscraper</h4>
+        <p>Sidebar vertical ad - tall sidebar placement</p>
+        <span class="status-badge status-active">Active</span>
+      </div>
+      <div class="size-card">
+        <h4>300x600 Half-Page</h4>
+        <p>Large sidebar takeover ad format</p>
+        <span class="status-badge status-active">Active</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="demo-website" id="demo-website">
+    <!-- Leaderboard 728x90 at the very top -->
+    <div class="leaderboard-ad">
+      <div class="ad-slot" id="ad-leaderboard" style="width: 728px; height: 90px;">
+        <span>728x90 Leaderboard<br>Ad Slot Ready</span>
+        <span class="ad-label">728×90</span>
+      </div>
+    </div>
+
+    <div class="main-content">
+      <article class="article-content">
+        <h2>The Complete Guide to Digital Advertising in 2024</h2>
+        <div class="article-meta">
+          Published on January 15, 2024 • 8 min read • By Marketing Team
+        </div>
+        
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. This article explores the cutting-edge trends shaping the digital advertising landscape this year.</p>
+        
+        <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Programmatic advertising continues to evolve, with AI-powered optimization becoming standard across all major ad platforms.</p>
+
+        <!-- In-Article Medium Rectangle 300x250 -->
+        <div class="in-article-ad">
+          <div class="ad-slot ad-300x250" id="ad-medium-rect">
+            <span>300x250<br>Medium Rectangle</span>
+            <span class="ad-label">300×250</span>
+          </div>
+        </div>
+
+        <p>The rise of connected TV (CTV) advertising has opened up new opportunities for brands to reach cord-cutting audiences. With over 80% of US households now having at least one connected TV device, the marketplace is rapidly shifting towards streaming environments. This represents a fundamental change in how consumers engage with video content.</p>
+        
+        <p>Social commerce is another area seeing explosive growth. Platforms like Instagram and TikTok are integrating shopping features directly into their feeds, blurring the lines between content discovery and conversion. Advertisers need to adapt their creative strategies to thrive in these shoppable environments where engagement directly translates to sales.</p>
+
+        <!-- Mobile Banner 320x50 -->
+        <div class="mobile-banner-ad">
+          <div class="ad-slot ad-320x50" id="ad-mobile-banner">
+            <span>320x50 Mobile Banner</span>
+            <span class="ad-label">320×50</span>
+          </div>
+        </div>
+
+        <p>Privacy remains the defining challenge of our industry. With the phasing out of third-party cookies, publishers and advertisers alike are investing heavily in first-party data strategies. Contextual advertising is experiencing a renaissance, proving that you don't need user tracking to deliver relevant, effective ad experiences that respect privacy.</p>
+        
+        <p>Sustainability in advertising is no longer a niche concern. Brands are increasingly demanding carbon-neutral ad campaigns, and ad servers are beginning to report on the environmental impact of digital creatives. This transparency builds trust with environmentally conscious consumers and positions forward-thinking brands as leaders in corporate responsibility.</p>
+
+        <p>Looking ahead, the advertisers who succeed will be those who embrace innovation while staying true to fundamental principles of good creative and respectful user experiences. The tools change, but the core of effective advertising - telling compelling stories that resonate - remains constant.</p>
+      </article>
+
+      <aside class="sidebar">
+        <!-- Wide Skyscraper 160x600 -->
+        <div class="ad-slot ad-160x600" id="ad-skyscraper">
+          <span>160x600<br>Wide Skyscraper</span>
+          <span class="ad-label">160×600</span>
+        </div>
+      </aside>
+    </div>
+
+    <!-- Footer Billboard 970x90 -->
+    <div class="footer-billboard">
+      <div class="ad-slot ad-970x90" id="ad-billboard">
+        <span>970x90 Billboard Ad Slot</span>
+        <span class="ad-label">970×90</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_URL = 'http://localhost:5000';
+    let statusLog = document.getElementById('status-log');
+    
+    function updateStatus(message) {
+      const timestamp = new Date().toLocaleTimeString();
+      statusLog.innerHTML = `[${timestamp}] ${message}`;
+      console.log(message);
+    }
+
+    async function fetchAdForSlot(adUnitId, containerId, device, geo) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+
+      container.innerHTML = '<span style="font-size:11px;">Requesting Ad...</span>';
+      
+      try {
+        const queryParams = new URLSearchParams({ adUnitId, device, geo }).toString();
+        const response = await fetch(`${API_URL}/api/serve?${queryParams}`);
+        
+        if (!response.ok) {
+          container.innerHTML = 'No eligible campaigns';
+          container.style.borderColor = '#c5221f';
+          updateStatus(`❌ Ad failed for ${containerId}: No eligible campaigns`);
+          return;
+        }
+
+        const adData = await response.json();
+        container.classList.add('served');
+        
+        const adImage = document.createElement('img');
+        adImage.src = adData.mediaUrl;
+        adImage.alt = "Advertisement";
+        adImage.onclick = () => window.open(adData.trackingPixels.clickUrl, '_blank');
+        
+        container.innerHTML = '';
+        container.appendChild(adImage);
+        
+        const label = document.createElement('span');
+        label.className = 'ad-label';
+        label.textContent = containerId.replace('ad-', '').replace(/-/g, ' ');
+        container.appendChild(label);
+        
+        updateStatus(`✅ Ad served to ${containerId}: ${adData.lineItemName || 'Campaign'}`);
+        
+      } catch (error) {
+        container.innerHTML = 'Connection error';
+        container.style.borderColor = '#c5221f';
+        updateStatus(`❌ Error for ${containerId}: ${error.message}`);
+      }
+    }
+
+    async function serveAllAds() {
+      const device = document.getElementById('device-select').value;
+      const geo = document.getElementById('geo-input').value;
+      const apiUrl = document.getElementById('api-input').value;
+      
+      updateStatus(`🚀 Serving all ads - Device: ${device}, Geo: ${geo}, API: ${apiUrl}`);
+
+      // This maps each ad slot to a hypothetical ad unit ID in your system
+      // In production, these would match your actual ad unit database IDs
+      const adSlots = [
+        { id: 'ad-leaderboard', unitId: '650abc123def4567890abcdef' }, // 728x90 leaderboard
+        { id: 'ad-medium-rect', unitId: '650abc123def4567890abcdeg' }, // 300x250 rectangle
+        { id: 'ad-mobile-banner', unitId: '650abc123def4567890abcdeh' }, // 320x50 mobile
+        { id: 'ad-skyscraper', unitId: '650abc123def4567890abcdei' }, // 160x600 skyscraper
+        { id: 'ad-billboard', unitId: '650abc123def4567890abcdej' }  // 970x90 billboard
+      ];
+
+      // Serve ads to all slots in parallel
+      await Promise.all(adSlots.map(slot => 
+        fetchAdForSlot(slot.unitId, slot.id, device, geo)
+      ));
+
+      updateStatus('✅ All ad requests completed! Check each slot above.');
+    }
+
+    // Handle device view changes
+    document.getElementById('device-select').addEventListener('change', function(e) {
+      const demo = document.getElementById('demo-website');
+      if (e.target.value === 'Mobile') {
+        demo.style.maxWidth = '480px';
+        document.querySelector('.main-content').style.gridTemplateColumns = '1fr';
+      } else if (e.target.value === 'Tablet') {
+        demo.style.maxWidth = '768px';
+        document.querySelector('.main-content').style.gridTemplateColumns = '1fr 300px';
+      } else {
+        demo.style.maxWidth = '1400px';
+        document.querySelector('.main-content').style.gridTemplateColumns = '1fr 300px';
+      }
+    });
+
+    // Attach button click handler
+    document.getElementById('serve-all-btn').addEventListener('click', serveAllAds);
+    
+    // Initialize
+    updateStatus('🎮 Preview hub ready! Click "Serve Ads to All Slots" to test your ad server.');
+  </script>
+</body>
+</html>

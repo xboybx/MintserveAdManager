@@ -1,6 +1,6 @@
 # Project Navigation & Codebase Guide
 
-> Last updated: 2026-05-19 | Status: Hierarchical Orders & Full CRUD Actions complete.
+> Last updated: 2026-05-27 | Status: Vercel deployment fixes + comprehensive Ad Preview Hub implemented.
 
 ---
 
@@ -68,10 +68,15 @@
 │   └── .env                        # MONGODB_URI, PORT, API_URL
 │
 ├── .env.local                      # NEXT_PUBLIC_API_URL for Next.js
-├── index.html                      # Mock publisher website for Phase 4 testing
-├── campaign_creation_and_testing_guide.md # Setup, testing, and dynamic slot insertion guide
-├── navigation.md                   # This file
-└── project_overview.md             # Original spec + change log
+├── vercel.json                     # Vercel deployment config: forces Next.js detection + /preview rewrite (fixes 404s)
+├── /public                         # Static assets served by Next.js
+│   ├── index.html                  # Simple publisher sandbox: accessed at /preview
+│   ├── ad-preview.html             # Comprehensive Ad Slot Preview Hub: accessed at /ad-preview.html
+│   └── Mintserve.webp              # Mintserve branding asset
+├── /llm wiki                       # Project documentation
+│   ├── campaign_creation_and_testing_guide.md # Setup, testing, and dynamic slot insertion guide
+│   ├── navigation.md               # This file
+│   └── project_overview.md         # Original spec + change log
 ```
 
 ---
@@ -98,6 +103,15 @@
 - Features dynamic search filtering by Name, and dropdown filtering by Status (Active/Inactive).
 - "+ New Ad Unit" opens modal to create an ad unit.
 - Action buttons in the table trigger the **Edit Modal** or a **Delete** API call (`DELETE /api/admin/ad-units/:id`). Deleting an ad unit automatically pauses related line items.
+
+---
+
+### D. Public Preview Routes
+These static pages are available for testing ad delivery without navigating the dashboard:
+- **/preview**: Simple publisher sandbox (routes to `/public/index.html` via vercel.json rewrites)
+- **/ad-preview.html**: Comprehensive Ad Slot Preview Hub with all standard IAB ad sizes in realistic positions
+- Access both locally: `http://localhost:3000/preview` and `http://localhost:3000/ad-preview.html`
+- The vercel.json configuration ensures these work correctly in Vercel production without 404 errors
 
 ---
 

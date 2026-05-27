@@ -178,7 +178,28 @@ window.addEventListener('DOMContentLoaded', injectAdBetweenParagraphs);
 
 ---
 
-## 3. Verifying & Troubleshooting
+## 3. Using the Built-in Ad Preview Hub
+Mintserve includes a comprehensive **Ad Slot Preview Hub** that lets you visualize all standard IAB ad sizes in realistic website positions before deploying to production. Access it at:
+- Local: `http://localhost:3000/ad-preview.html`
+- Vercel production: `https://your-project.vercel.app/ad-preview.html`
+
+### What the Preview Hub Provides:
+| Ad Size | Placement | Use Case |
+|---------|-----------|----------|
+| **728×90 Leaderboard** | Page header | Classic desktop banner |
+| **300×250 Medium Rectangle** | In-article | Most versatile in-content ad |
+| **320×50 Mobile Banner** | Mid-article | Mobile-first ad placement |
+| **160×600 Wide Skyscraper** | Sidebar | Vertical sidebar ad |
+| **970×90 Billboard** | Page footer | Wide footer banner |
+
+### Features:
+- **Responsive testing**: Switch between Desktop/Tablet/Mobile views
+- **One-click serving**: Click "Serve Ads to All Slots" to test your ad server across every slot simultaneously
+- **Live status logging**: Track successful loads and errors in real-time
+- **Realistic dummy website**: See ads exactly as visitors would experience them
+- **Visual feedback**: Green borders for successfully served ads, red for errors
+
+## 4. Verifying & Troubleshooting
 
 *   **Pacing & Analytics**: Once you click on an ad, check the **Reporting** and **Home** dashboard tabs in Mintserve. You will see the total impressions, clicks, CTR, and estimated revenue update in real-time.
 *   **Ad Doesn't Display? Check these reasons**:
@@ -186,3 +207,5 @@ window.addEventListener('DOMContentLoaded', injectAdBetweenParagraphs);
     2.  **Status**: Verify that both the **Order** status is `Approved` and the **Line Item** status is `Active`.
     3.  **Caps & Limits**: Verify that the line item's delivered impressions/clicks are below the set total limit.
     4.  **Targeting Rules**: Ensure the parameters sent in the API request query (e.g. `device=Mobile` or `geo=US`) match the targeting conditions set on the Line Item.
+    5.  **Vercel Deployment**: In production, use `/preview` for the simple publisher sandbox or `/ad-preview.html` for the comprehensive hub (fixed in vercel.json to avoid 404s).
+*   **Simple Publisher Sandbox**: The original minimal test page is still available at: `/preview` (routes to `/index.html` via vercel.json rewrites)
